@@ -1,4 +1,5 @@
 #include "Scenes.h"
+#include <iostream>
 
 Scene_Game::Scene_Game() : Background({0, 0, -1, -1}, "Background"), pn(rand() * rand()) {
 
@@ -15,7 +16,21 @@ Scene_Game::Scene_Game() : Background({0, 0, -1, -1}, "Background"), pn(rand() *
 	    int platformY = static_cast<int>(noise * 24);
 
 	    for (int y = platformY; y < 24; ++y) {
-	        tiles.push_back(AST::Rect({ x * 32, y * 32, 32, 32 }, (y == platformY) ? "Grass" : "Dirt"));
+	    	std::string texture;
+	    	if(y == platformY) {
+	    		double prevNoise = pn.noise((x - 1) / 24.0, 0.0);
+	    		int prevplatformY = static_cast<int>(prevNoise * 24);
+				double nextNoise = pn.noise((x + 1) / 24.0, 0.0);
+				int nextplatformY = static_cast<int>(nextNoise * 24);
+
+				if (prevplatformY == platformY && nextplatformY == platformY) texture = "Grass";
+				else if (prevplatformY == platformY && nextplatformY != platformY) texture = "GrassEnd";
+				else if (prevplatformY != platformY && nextplatformY == platformY) texture = "GrassBegin";
+				else texture = "Grass";
+ 
+	    	} else texture = "Dirt";
+
+	        tiles.push_back(AST::Rect({ x * 32, y * 32, 32, 32 }, texture));
 	    }
 	}
 }
