@@ -81,10 +81,10 @@ namespace AST {
 			//Event Handling
 			SDL_Event event;
 			keys.clear();
-			while (SDL_PollEvent(&event)) scene.event(event, Mouse);
+			while (SDL_PollEvent(&event)) scene.event(event);
 			//Rendering
 			SDL_RenderClear(ren);
-			scene.loop(Mouse);
+			scene.loop();
 			SDL_RenderPresent(ren);
 		}
 	}
@@ -153,34 +153,27 @@ namespace SpriteManager {
 	bool debug;
 
 	bool load(std::string keyword, std::string file) {
-		for (auto sprite : sprites) if (sprite.second == keyword && sprite.first != nullptr) return true;
+	    for (auto sprite : sprites)
+	        if (sprite.second == keyword && sprite.first != nullptr)
+	            return true;
 
-		SDL_Surface * temp = IMG_Load(("res/" + file).c_str());
+	    SDL_Texture* texture = IMG_LoadTexture(AST::ren, ("res/" + file).c_str());
+	    if (texture == nullptr)
+	        return false;
 
-		if (temp != nullptr) {
-			sprites.push_back({
-				SDL_CreateTextureFromSurface(AST::ren, temp),
-				keyword
-			});
-			SDL_FreeSurface(temp);
-			return true;
-		}
-
-		return false;
+	    sprites.push_back({ texture, keyword });
+	    return true;
 	}
 
 	bool load(std::string keyword, std::string sheetFile, SDL_Rect spriteRect) {
-	    
+	    for (auto sprite : sprites) {
+	        if (sprite.second == keyword && sprite.first != nullptr)
+	            return true;
+	    }
 
-	    for (auto sprite : sprites) if (sprite.second == keyword && sprite.first != nullptr) return true;
-
-	    SDL_Surface * sheetSurface = IMG_Load(("res/" + sheetFile).c_str());
-	    if (sheetSurface == nullptr) return false;
-
-	    SDL_Texture * sheetTexture = SDL_CreateTextureFromSurface(AST::ren, sheetSurface);
-	    SDL_FreeSurface(sheetSurface);
-
-	    if (sheetTexture == nullptr) return false;
+	    SDL_Texture* sheetTexture = IMG_LoadTexture(AST::ren, ("res/" + sheetFile).c_str());
+	    if (sheetTexture == nullptr)
+	        return false;
 
 	    SDL_Texture* spriteTexture = SDL_CreateTexture(AST::ren, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, spriteRect.w, spriteRect.h);
 	    if (spriteTexture == nullptr) {
@@ -192,6 +185,8 @@ namespace SpriteManager {
 	    SDL_RenderCopy(AST::ren, sheetTexture, &spriteRect, nullptr);
 	    SDL_SetRenderTarget(AST::ren, nullptr);
 	    sprites.push_back({ spriteTexture, keyword });
+
+	    SDL_DestroyTexture(sheetTexture);
 
 	    return true;
 	}

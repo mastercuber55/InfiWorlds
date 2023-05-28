@@ -8,7 +8,7 @@ class Scene_Title : public AST::Scene {
 	AST::Rect Background;
 	public:
 		Scene_Title();
-		void loop(SDL_Point &Mouse) override;
+		void loop() override;
 		~Scene_Title();
 };
 

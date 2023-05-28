@@ -1,6 +1,8 @@
 #include "Scenes.h"
 #include <iostream>
 
+using AST::keys;
+
 Scene_Game::Scene_Game() : Background({0, 0, -1, -1}, "Background"), pn(rand() * rand()), cords{0, 0} {
 
 	SpriteManager::load("Background", SCENE("Background/Background.png"));
@@ -8,6 +10,7 @@ Scene_Game::Scene_Game() : Background({0, 0, -1, -1}, "Background"), pn(rand() *
 	SpriteManager::load("Grass", SCENE("Assets/Tiles.png"), {16, 0, 32, 32});
 	SpriteManager::load("GrassEnd", SCENE("Assets/Tiles.png"), {48, 0, 32, 32});
 	SpriteManager::load("Dirt", SCENE("Assets/Tiles.png"), {48, 32, 16, 16});
+	SpriteManager::load("Stone", SCENE("Assets/Tiles.png"), {64, 160, 32, 32});
 
 	for (int x = cords.x; x < cords.x + 60; ++x) {
 	    double noise = pn.noise(x / 24.0, 0.0);  // Generate noise for the x-coordinate only
@@ -40,7 +43,7 @@ Scene_Game::Scene_Game() : Background({0, 0, -1, -1}, "Background"), pn(rand() *
 
 	        tiles.push_back(AST::Rect({ (x - cords.x) * 32, (y - cords.y) * 32, 32, 32 }, texture));
 	    }
-}
+	}
 }
 
 bool outside(AST::Rect rect) {
@@ -93,12 +96,12 @@ void Scene_Game::loop() {
 
 void Scene_Game::event(SDL_Event &ev) {
 	AST::HandleEv(ev);
-	if(AST::keys[SDLK_w]) scroll(0, 1);
-	else if(AST::keys[SDLK_s]) scroll(0, -1);
-	else if(AST::keys[SDLK_a]) scroll(1, 0);
-	else if(AST::keys[SDLK_d]) scroll(-1, 0);
-	else if(AST::keys[SDLK_F11]) AST::fullscreen(!AST::isFullscreen);
-	else if(AST::keys[SDLK_ESCAPE] || AST::keys[SDL_QUIT]) AST::loop = false;
+	if(keys[SDLK_w]) scroll(0, 1);
+	else if(keys[SDLK_s]) scroll(0, -1);
+	else if(keys[SDLK_a]) scroll(1, 0);
+	else if(keys[SDLK_d]) scroll(-1, 0);
+	else if(keys[SDLK_F11]) AST::fullscreen(!AST::isFullscreen);
+	else if(keys[SDLK_ESCAPE] || keys[SDL_QUIT]) AST::loop = false;
 }
 
 Scene_Game::~Scene_Game() {
