@@ -23,7 +23,7 @@ namespace AST {
 	extern std::unordered_map<std::string, bool> keys;
 	extern std::string instruction;
 
-	void Init(std::string title, int width = 32 * 42, int height = 32 * 24); 
+	void Init(std::string title); 
 
 	void HandleEv(SDL_Event& event);
 
