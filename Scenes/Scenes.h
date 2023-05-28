@@ -18,11 +18,15 @@ class Scene_Game : public AST::Scene {
 	PerlinNoise pn;
 	AST::Rect Background;
 	std::vector<AST::Rect> tiles;
+	SDL_Point cords;
+
+	void scroll(int x, int y);
+	void generate(int startX, int endX);
 
 	public:
 
 		Scene_Game();
 		void loop(SDL_Point &Mouse) override;
-		// void event(SDL_Event &Event, SDL_Point &Mouse) override;
+		void event(SDL_Event &Event, SDL_Point &Mouse) override;
 		~Scene_Game();
 };
