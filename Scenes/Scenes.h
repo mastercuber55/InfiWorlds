@@ -26,7 +26,7 @@ class Scene_Game : public AST::Scene {
 	public:
 
 		Scene_Game();
-		void loop(SDL_Point &Mouse) override;
-		void event(SDL_Event &Event, SDL_Point &Mouse) override;
+		void loop() override;
+		void event(SDL_Event &Event) override;
 		~Scene_Game();
 };

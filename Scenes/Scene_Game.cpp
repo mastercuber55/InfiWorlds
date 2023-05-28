@@ -86,18 +86,19 @@ void Scene_Game::scroll(int x, int y) {
 	}
 }
 
-void Scene_Game::loop(SDL_Point &Mouse) {
+void Scene_Game::loop() {
 	SpriteManager::draw(Background);
 	for(auto& tile : tiles) SpriteManager::draw(tile);
 }
 
-void Scene_Game::event(SDL_Event &ev, SDL_Point &Mouse) {
+void Scene_Game::event(SDL_Event &ev) {
 	AST::HandleEv(ev);
-	if(AST::keys["W"]) scroll(0, 1);
-	else if(AST::keys["S"]) scroll(0, -1);
-	else if(AST::keys["A"]) scroll(1, 0);
-	else if(AST::keys["D"]) scroll(-1, 0);
-	else if(AST::keys["Escape"] || AST::keys["SDL_QUIT"]) AST::loop = false;
+	if(AST::keys[SDLK_w]) scroll(0, 1);
+	else if(AST::keys[SDLK_s]) scroll(0, -1);
+	else if(AST::keys[SDLK_a]) scroll(1, 0);
+	else if(AST::keys[SDLK_d]) scroll(-1, 0);
+	else if(AST::keys[SDLK_F11]) AST::fullscreen(!AST::isFullscreen);
+	else if(AST::keys[SDLK_ESCAPE] || AST::keys[SDL_QUIT]) AST::loop = false;
 }
 
 Scene_Game::~Scene_Game() {

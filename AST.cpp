@@ -10,7 +10,7 @@ namespace AST {
 	int grid = 1;
 	bool loop;
 	bool isFullscreen = false;
-	std::unordered_map<std::string, bool> keys;
+	std::unordered_map<int, bool> keys;
 	std::string instruction;
 
 	void Init(std::string title) {
@@ -18,6 +18,7 @@ namespace AST {
 
 	    win = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 0, 0, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
 	    ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_PRESENTVSYNC);
+	    // SDL_RenderSetIntegerScale(ren, SDL_TRUE);
 
 	    SDL_SetWindowResizable(win, SDL_FALSE);
 
@@ -31,6 +32,7 @@ namespace AST {
 	    scaleY = static_cast<float>(windowRect.h) / 1080;
 
 	    SDL_RenderSetScale(ren, scaleX, scaleY);
+
 	}
 
 	void HandleEv(SDL_Event & event) {
@@ -44,44 +46,29 @@ namespace AST {
 			AST::Mouse.y *= AST::grid;
 
 			if (event.type == SDL_MOUSEBUTTONDOWN) {
-				std::string to;
-				switch (event.button.button) {
-				case SDL_BUTTON_LEFT:
-					to = "L";
-					break;
-				case SDL_BUTTON_MIDDLE:
-					to = "M";
-					break;
-				case SDL_BUTTON_RIGHT:
-					to = "R";
-					break;
-				}	
-				keys[to + "MB"] = true;
+				return;
+				keys[event.button.button] = true;
 			}
 
 			//Key Handling
 
 
-			if (event.type == SDL_QUIT) {
-				keys["SDL_QUIT"] = true;
-				return;
-			}
-
+			keys[event.type] = true;
 			// https://wiki.libsdl.org/SDL2/SDL_Keycode
-			if (event.type == SDL_KEYDOWN) keys[SDL_GetKeyName(event.key.keysym.sym)] = true;
+			if (event.type == SDL_KEYDOWN) keys[event.key.keysym.sym] = true;
 	}
 
 	Scene::Scene() {
 		AST::loop = true;
 	}
 
-	void Scene::loop(SDL_Point& mouse) {
+	void Scene::loop() {
 		
 	}
 
-	void Scene::event(SDL_Event& event, SDL_Point& mouse) {
+	void Scene::event(SDL_Event& event) {
 		AST::HandleEv(event);
-		if (AST::keys["SDL_QUIT"]) AST::loop = false;
+		if (AST::keys[SDL_QUIT]) AST::loop = false;
 	}
 
 	Scene::~Scene() {
